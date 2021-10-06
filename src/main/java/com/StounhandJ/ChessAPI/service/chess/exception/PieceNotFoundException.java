@@ -1,4 +1,4 @@
-package com.example.chess.service.chess.exception;
+package com.StounhandJ.ChessAPI.service.chess.exception;
 
 public class PieceNotFoundException extends Exception {
 

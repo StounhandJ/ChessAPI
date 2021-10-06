@@ -1,6 +1,6 @@
-package com.example.chess.service;
+package com.StounhandJ.ChessAPI.service;
 
-import com.example.chess.model.User;
+import com.StounhandJ.ChessAPI.model.User;
 
 import java.util.List;
 

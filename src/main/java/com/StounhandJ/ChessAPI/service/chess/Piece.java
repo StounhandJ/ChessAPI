@@ -1,4 +1,4 @@
-package com.example.chess.service.chess;
+package com.StounhandJ.ChessAPI.service.chess;
 
 public class Piece {
 

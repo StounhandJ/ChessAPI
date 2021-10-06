@@ -1,6 +1,6 @@
-package com.example.chess.unit;
+package com.StounhandJ.ChessAPI.unit;
 
-import com.example.chess.service.chess.Piece;
+import com.StounhandJ.ChessAPI.service.chess.Piece;
 
 import org.junit.Before;
 import org.junit.Test;

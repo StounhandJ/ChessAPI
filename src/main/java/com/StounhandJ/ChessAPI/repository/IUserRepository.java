@@ -1,6 +1,6 @@
-package com.example.chess.repository;
+package com.StounhandJ.ChessAPI.repository;
 
-import com.example.chess.model.User;
+import com.StounhandJ.ChessAPI.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

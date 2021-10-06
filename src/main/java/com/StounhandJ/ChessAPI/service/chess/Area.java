@@ -1,6 +1,6 @@
-package com.example.chess.service.chess;
+package com.StounhandJ.ChessAPI.service.chess;
 
-import com.example.chess.service.chess.exception.PieceNotFoundException;
+import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 
 import java.util.List;
 

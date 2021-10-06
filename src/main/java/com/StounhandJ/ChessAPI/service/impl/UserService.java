@@ -1,9 +1,9 @@
-package com.example.chess.service.impl;
-import com.example.chess.model.User;
-import com.example.chess.repository.IUserRepository;
+package com.StounhandJ.ChessAPI.service.impl;
+import com.StounhandJ.ChessAPI.model.User;
+import com.StounhandJ.ChessAPI.repository.IUserRepository;
 import java.util.List;
 
-import com.example.chess.service.IUserService;
+import com.StounhandJ.ChessAPI.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

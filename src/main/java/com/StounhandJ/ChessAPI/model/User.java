@@ -1,4 +1,4 @@
-package com.example.chess.model;
+package com.StounhandJ.ChessAPI.model;
 
 import javax.persistence.*;
 import java.util.Objects;
