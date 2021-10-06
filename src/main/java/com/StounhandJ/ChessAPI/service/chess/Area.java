@@ -1,5 +1,6 @@
 package com.StounhandJ.ChessAPI.service.chess;
 
+import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 
 import java.util.List;
@@ -16,7 +17,10 @@ public class Area {
         this.pieces.remove(this.getPiece(x, y));
     }
 
-    public void movePiece(Integer oldX, Integer oldY, Integer newX, Integer newY) throws PieceNotFoundException {
+    public void movePiece(Integer oldX, Integer oldY, Integer newX, Integer newY) throws PieceNotFoundException, FieldIsOccupiedException {
+        if (this.isOccupied(newX, newY))
+            throw new FieldIsOccupiedException();
+
         this.getPiece(oldX, oldY)
                 .setCoordinateX(newX)
                 .setCoordinateY(newY);
@@ -29,6 +33,15 @@ public class Area {
             }
         }
         throw new PieceNotFoundException();
+    }
+
+    public boolean isOccupied(Integer x, Integer y) {
+        for (Piece piece : this.pieces) {
+            if (piece.isCoordinates(x, y)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 //    public List<Integer> area;
