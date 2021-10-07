@@ -2,6 +2,7 @@ package com.StounhandJ.ChessAPI.unit;
 
 import com.StounhandJ.ChessAPI.service.chess.Piece;
 
+import com.StounhandJ.ChessAPI.service.chess.Role;
 import com.StounhandJ.ChessAPI.service.chess.pieces.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +23,12 @@ public class PieceTest {
     @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {new Bishop(6, 5), 6, 5},
-                {new Horse(2, 2), 2, 2},
-                {new King(4, 0), 4, 0},
-                {new Pawn(3, 4), 3, 4},
-                {new Queen(1, 8), 1, 8},
-                {new Rook(0, 2), 0, 2},
+                {new Bishop(6, 5, Role.BLACK), 6, 5},
+                {new Horse(2, 2, Role.BLACK), 2, 2},
+                {new King(4, 0, Role.BLACK), 4, 0},
+                {new Pawn(3, 4, Role.BLACK), 3, 4},
+                {new Queen(1, 8, Role.BLACK), 1, 8},
+                {new Rook(0, 2, Role.BLACK), 0, 2},
         });
     }
 

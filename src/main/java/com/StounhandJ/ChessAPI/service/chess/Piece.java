@@ -2,13 +2,16 @@ package com.StounhandJ.ChessAPI.service.chess;
 
 public abstract class Piece {
 
+    protected Role role;
+
     protected Integer x;
 
     protected Integer y;
 
-    public Piece(Integer x, Integer y) {
+    public Piece(Integer x, Integer y, Role role) {
         this.x = x;
         this.y = y;
+        this.role = role;
     }
 
     //<editor-fold desc="Get">
@@ -23,6 +26,10 @@ public abstract class Piece {
 
     public Integer getCoordinateY() {
         return this.y;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     //</editor-fold>
@@ -42,6 +49,11 @@ public abstract class Piece {
     public Piece setCoordinates(Integer x, Integer y) {
         this.setCoordinateX(x);
         this.setCoordinateY(y);
+        return this;
+    }
+
+    public Piece setRole(Role role) {
+        this.role = role;
         return this;
     }
 

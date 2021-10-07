@@ -1,12 +1,13 @@
 package com.StounhandJ.ChessAPI.service.chess.pieces;
 
 import com.StounhandJ.ChessAPI.service.chess.Piece;
+import com.StounhandJ.ChessAPI.service.chess.Role;
 
 import static java.lang.Math.abs;
 
 public class Horse extends Piece {
-    public Horse(Integer x, Integer y) {
-        super(x, y);
+    public Horse(Integer x, Integer y, Role role) {
+        super(x, y, role);
     }
 
     @Override

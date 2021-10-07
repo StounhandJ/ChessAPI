@@ -3,6 +3,7 @@ package com.StounhandJ.ChessAPI.unit;
 import com.StounhandJ.ChessAPI.service.chess.Piece;
 import com.StounhandJ.ChessAPI.service.chess.Area;
 
+import com.StounhandJ.ChessAPI.service.chess.Role;
 import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 import com.StounhandJ.ChessAPI.service.chess.pieces.Horse;
@@ -23,10 +24,10 @@ public class AreaUnit {
     Area area;
     Piece piece_one;
     Piece piece_two;
-    Integer x_one = 10;
-    Integer y_one = 5;
-    Integer x_two = 7;
-    Integer y_two = 2;
+    Integer x_one;
+    Integer y_one;
+    Integer x_two;
+    Integer y_two;
 
     @Parameterized.Parameters
     public static Iterable<Object[]> data() {
@@ -36,8 +37,8 @@ public class AreaUnit {
     }
 
     private static Object[] generate(Integer x_one, Integer y_one, Integer x_two, Integer y_two) {
-        Piece piece_one_1 = new Horse(x_one, y_one);
-        Piece piece_two_1 = new Rook(x_two, y_two);
+        Piece piece_one_1 = new Horse(x_one, y_one, Role.BLACK);
+        Piece piece_two_1 = new Rook(x_two, y_two, Role.BLACK);
         return new Object[]{
                 new Area(Arrays.asList(piece_one_1, piece_two_1)),
                 piece_one_1,
@@ -62,8 +63,8 @@ public class AreaUnit {
     public void pieceTestAfter3() {
         List<Piece> pieces = new ArrayList<>() {
         };
-        this.piece_one = new Rook(this.x_one, this.y_one);
-        this.piece_two = new Rook(this.x_two, this.y_two);
+        this.piece_one = new Rook(this.x_one, this.y_one, Role.BLACK);
+        this.piece_two = new Rook(this.x_two, this.y_two, Role.BLACK);
         pieces.add(this.piece_one);
         pieces.add(this.piece_two);
 

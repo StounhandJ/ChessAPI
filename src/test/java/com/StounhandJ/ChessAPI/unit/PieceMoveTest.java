@@ -2,6 +2,7 @@ package com.StounhandJ.ChessAPI.unit;
 
 
 import com.StounhandJ.ChessAPI.service.chess.Piece;
+import com.StounhandJ.ChessAPI.service.chess.Role;
 import com.StounhandJ.ChessAPI.service.chess.pieces.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,56 +26,62 @@ public class PieceMoveTest {
     private static Stream<Arguments> trueMove() {
         return Stream.of(
 
-                arguments(new Bishop(2, 2), 3, 3),
-                arguments(new Bishop(2, 2), 1, 1),
-                arguments(new Bishop(2, 2), 1, 3),
+                arguments(new Bishop(2, 2, Role.BLACK), 3, 3),
+                arguments(new Bishop(2, 2, Role.BLACK), 1, 1),
+                arguments(new Bishop(2, 2, Role.BLACK), 1, 3),
 
-                arguments(new Horse(5, 5), 6, 7),
-                arguments(new Horse(5, 5), 7, 4),
-                arguments(new Horse(5, 5), 3, 6),
+                arguments(new Horse(5, 5, Role.BLACK), 6, 7),
+                arguments(new Horse(5, 5, Role.BLACK), 7, 4),
+                arguments(new Horse(5, 5, Role.BLACK), 3, 6),
 
-                arguments(new King(2, 2), 3, 3),
-                arguments(new King(2, 2), 1, 2),
-                arguments(new King(2, 2), 3, 1),
+                arguments(new King(2, 2, Role.BLACK), 3, 3),
+                arguments(new King(2, 2, Role.BLACK), 1, 2),
+                arguments(new King(2, 2, Role.BLACK), 3, 1),
 
-                arguments(new Pawn(2, 2), 2, 3),
-                arguments(new Pawn(2, 2), 1, 3),
-                arguments(new Pawn(2, 2), 3, 3),
+                arguments(new Pawn(2, 2, Role.BLACK), 2, 1),
+                arguments(new Pawn(2, 2, Role.BLACK), 1, 1),
+                arguments(new Pawn(2, 2, Role.BLACK), 3, 1),
+                arguments(new Pawn(2, 2, Role.WHITE), 2, 3),
+                arguments(new Pawn(2, 2, Role.WHITE), 1, 3),
+                arguments(new Pawn(2, 2, Role.WHITE), 3, 3),
 
-                arguments(new Queen(2, 2), 3, 3),
-                arguments(new Queen(2, 2), 1, 1),
-                arguments(new Queen(2, 2), 2, 5),
-                arguments(new Queen(2, 2), 5, 2),
-                arguments(new Queen(2, 2), 3, 3),
+                arguments(new Queen(2, 2, Role.BLACK), 3, 3),
+                arguments(new Queen(2, 2, Role.BLACK), 1, 1),
+                arguments(new Queen(2, 2, Role.BLACK), 2, 5),
+                arguments(new Queen(2, 2, Role.BLACK), 5, 2),
+                arguments(new Queen(2, 2, Role.BLACK), 3, 3),
 
-                arguments(new Rook(2, 2), 2, 5),
-                arguments(new Rook(2, 2), 5, 2),
-                arguments(new Rook(2, 2), 0, 2)
+                arguments(new Rook(2, 2, Role.BLACK), 2, 5),
+                arguments(new Rook(2, 2, Role.BLACK), 5, 2),
+                arguments(new Rook(2, 2, Role.BLACK), 0, 2)
         );
     }
 
     private static Stream<Arguments> falseMove() {
         return Stream.of(
 
-                arguments(new Bishop(2, 2), 4, 3),
-                arguments(new Bishop(2, 2), 1, 2),
+                arguments(new Bishop(2, 2, Role.BLACK), 4, 3),
+                arguments(new Bishop(2, 2, Role.BLACK), 1, 2),
 
-                arguments(new Horse(5, 5), 7, 5),
-                arguments(new Horse(5, 5), 7, 3),
-                arguments(new Horse(5, 5), 4, 6),
+                arguments(new Horse(5, 5, Role.BLACK), 7, 5),
+                arguments(new Horse(5, 5, Role.BLACK), 7, 3),
+                arguments(new Horse(5, 5, Role.BLACK), 4, 6),
 
-                arguments(new King(2, 2), 4, 3),
-                arguments(new King(2, 2), 1, 0),
+                arguments(new King(2, 2, Role.BLACK), 4, 3),
+                arguments(new King(2, 2, Role.BLACK), 1, 0),
 
-                arguments(new Pawn(2, 2), 1, 2),
-                arguments(new Pawn(2, 2), 1, 4),
-                arguments(new Pawn(2, 2), 2, 0),
+                arguments(new Pawn(2, 2, Role.BLACK), 1, 2),
+                arguments(new Pawn(2, 2, Role.BLACK), 1, 0),
+                arguments(new Pawn(2, 2, Role.BLACK), 2, 3),
+                arguments(new Pawn(2, 2, Role.WHITE), 1, 2),
+                arguments(new Pawn(2, 2, Role.WHITE), 1, 4),
+                arguments(new Pawn(2, 2, Role.WHITE), 2, 1),
 
-                arguments(new Queen(2, 2), 4, 3),
-                arguments(new Queen(2, 2), 0, 1),
+                arguments(new Queen(2, 2, Role.BLACK), 4, 3),
+                arguments(new Queen(2, 2, Role.BLACK), 0, 1),
 
-                arguments(new Rook(2, 2), 3, 5),
-                arguments(new Rook(2, 2), 5, 1)
+                arguments(new Rook(2, 2, Role.BLACK), 3, 5),
+                arguments(new Rook(2, 2, Role.BLACK), 5, 1)
         );
     }
 

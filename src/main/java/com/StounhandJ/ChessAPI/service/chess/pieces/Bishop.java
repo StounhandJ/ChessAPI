@@ -1,12 +1,14 @@
 package com.StounhandJ.ChessAPI.service.chess.pieces;
 
 import com.StounhandJ.ChessAPI.service.chess.Piece;
+import com.StounhandJ.ChessAPI.service.chess.Role;
 
 import static java.lang.Math.abs;
 
 public class Bishop extends Piece {
-    public Bishop(Integer x, Integer y) {
-        super(x, y);
+
+    public Bishop(Integer x, Integer y, Role role) {
+        super(x, y, role);
     }
 
     @Override
