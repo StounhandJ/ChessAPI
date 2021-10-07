@@ -2,22 +2,45 @@ package com.StounhandJ.ChessAPI.unit;
 
 import com.StounhandJ.ChessAPI.service.chess.Piece;
 
+import com.StounhandJ.ChessAPI.service.chess.pieces.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(Parameterized.class)
 public class PieceTest {
 
     Piece piece;
-    Integer x = 10;
-    Integer y = 5;
+    Integer x;
+    Integer y;
+
+    @Parameterized.Parameters(name = "{index}: {0}")
+    public static Iterable<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {new Bishop(6, 5), 6, 5},
+                {new Horse(2, 2), 2, 2},
+                {new King(4, 0), 4, 0},
+                {new Pawn(3, 4), 3, 4},
+                {new Queen(1, 8), 1, 8},
+                {new Rook(0, 2), 0, 2},
+        });
+    }
+
+    public PieceTest(Piece piece, Integer x, Integer y) {
+        this.piece = piece;
+        this.x = x;
+        this.y = y;
+    }
 
     @Before
     public void pieceTestAfter3() {
-        this.piece = new Piece(this.x, this.y);
+        this.piece.setCoordinateX(this.x)
+                  .setCoordinateY(this.y);
     }
 
     @Test
@@ -66,6 +89,16 @@ public class PieceTest {
         Integer[] expected = new Integer[]{this.x, this.y};
 
         assertArrayEquals(expected, this.piece.getCoordinates());
+    }
+
+    @Test
+    public void isCoordinatesTrueTest() {
+        assertTrue(this.piece.isCoordinates(this.x, this.y));
+    }
+
+    @Test
+    public void isCoordinatesFalseTest() {
+        assertFalse(this.piece.isCoordinates(this.x - 1, this.y + 1));
     }
 
 }

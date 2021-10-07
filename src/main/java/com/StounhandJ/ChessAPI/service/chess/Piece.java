@@ -1,10 +1,10 @@
 package com.StounhandJ.ChessAPI.service.chess;
 
-public class Piece {
+public abstract class Piece {
 
-    private Integer x;
+    protected Integer x;
 
-    private Integer y;
+    protected Integer y;
 
     public Piece(Integer x, Integer y) {
         this.x = x;
@@ -52,6 +52,8 @@ public class Piece {
     public boolean isCoordinates(Integer x, Integer y) {
         return this.getCoordinateX().equals(x) && this.getCoordinateY().equals(y);
     }
+
+    public abstract boolean isMoved(Integer x, Integer y);
 
     //</editor-fold>
 
