@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(Parameterized.class)
 public class AreaUnit {
@@ -161,41 +161,5 @@ public class AreaUnit {
         ));
 
         area.getAllAvailableMoves(piece.getCoordinateX() + 1, piece.getCoordinateY());
-    }
-
-    @Test
-    public void addAllAvailableMovesDataTest() throws PieceNotFoundException {
-        Piece piece = new Horse(1, 1, Role.WHITE);
-        Area area = new Area(Arrays.asList(
-                piece,
-                new Rook(3, 2, Role.WHITE)
-        ));
-
-        List<List<Integer>> expected = Arrays.asList(
-                Arrays.asList(0, 3),
-                Arrays.asList(2, 3),
-                Arrays.asList(3, 0)
-
-        );
-
-        assertTrue(expected.containsAll(area.getAllAvailableMoves(piece.getCoordinateX(), piece.getCoordinateY())));
-    }
-
-    @Test
-    public void addAllAvailableMovesTest() {
-        Piece piece = new Horse(1, 1, Role.WHITE);
-        Area area = new Area(Arrays.asList(
-                piece,
-                new Rook(3, 2, Role.WHITE)
-        ));
-
-        List<List<Integer>> expected = Arrays.asList(
-                Arrays.asList(0, 3),
-                Arrays.asList(2, 3),
-                Arrays.asList(3, 0)
-        );
-
-        assertTrue(expected.containsAll(area.getAllAvailableMoves(piece)));
-
     }
 }
