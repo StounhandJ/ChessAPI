@@ -6,10 +6,13 @@ import com.StounhandJ.ChessAPI.service.chess.Area;
 import com.StounhandJ.ChessAPI.service.chess.Role;
 import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
+import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
 import com.StounhandJ.ChessAPI.service.chess.pieces.Horse;
 import com.StounhandJ.ChessAPI.service.chess.pieces.Rook;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(Parameterized.class)
@@ -98,9 +102,37 @@ public class AreaUnit {
     }
 
     @Test(expected = PieceNotFoundException.class)
-    public void delPieceTest() throws PieceNotFoundException {
+    public void delPieceExceptionTest() throws PieceNotFoundException {
         this.area.delPiece(this.x_one, this.y_one);
 
         this.area.getPiece(this.x_one, this.y_one);
+    }
+
+    @Test
+    public void addPieceTest() throws PieceNotFoundException, FieldIsOccupiedException {
+        Integer x = this.x_one + this.x_two;
+        Integer y = this.y_one + this.y_two;
+        Piece piece = new Rook(x, y, Role.WHITE);
+        this.area.addPiece(piece);
+
+        assertEquals(piece, this.area.getPiece(x, y));
+    }
+
+    @Test(expected = FieldIsOccupiedException.class)
+    public void addPieceExceptionTest() throws FieldIsOccupiedException {
+        Integer x = this.x_one;
+        Integer y = this.y_one;
+        Piece piece = new Rook(x, y, Role.WHITE);
+
+        this.area.addPiece(piece);
+    }
+
+    @Test
+    public void addPieceDataTest() throws FieldIsOccupiedException, UnsuccessfulPieceCreationException, PieceNotFoundException {
+        Integer x = this.x_one + this.x_two;
+        Integer y = this.y_one + this.y_two;
+        this.area.addPiece(x, y, Role.WHITE, Rook.class);
+
+        this.area.getPiece(x, y);
     }
 }

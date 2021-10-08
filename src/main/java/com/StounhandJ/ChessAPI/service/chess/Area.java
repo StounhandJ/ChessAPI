@@ -2,16 +2,42 @@ package com.StounhandJ.ChessAPI.service.chess;
 
 import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
+import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class Area {
 
-    List<Piece> pieces;
-
     public Area(List<Piece> pieces) {
         this.pieces = pieces;
     }
+
+    private final List<Piece> pieces;
+
+    //<editor-fold desc="Add Piece">
+
+    public void addPiece(Integer x, Integer y, Role role, Class<? extends Piece> pieceClass)
+            throws FieldIsOccupiedException, UnsuccessfulPieceCreationException {
+
+        Piece piece;
+        try {
+            piece = pieceClass.getConstructor(Integer.class, Integer.class, Role.class).newInstance(x, y, role);
+        } catch (Exception e) {
+            throw new UnsuccessfulPieceCreationException();
+        }
+
+        this.addPiece(piece);
+    }
+
+    public void addPiece(Piece piece) throws FieldIsOccupiedException {
+        if (this.isOccupied(piece.getCoordinateX(), piece.getCoordinateY()))
+            throw new FieldIsOccupiedException();
+        this.pieces.add(piece);
+    }
+
+    //</editor-fold>
 
     public void delPiece(Integer x, Integer y) throws PieceNotFoundException {
         this.pieces.remove(this.getPiece(x, y));
