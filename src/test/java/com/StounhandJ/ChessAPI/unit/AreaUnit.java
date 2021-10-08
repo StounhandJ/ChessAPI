@@ -1,8 +1,7 @@
 package com.StounhandJ.ChessAPI.unit;
 
-import com.StounhandJ.ChessAPI.service.chess.Piece;
 import com.StounhandJ.ChessAPI.service.chess.Area;
-
+import com.StounhandJ.ChessAPI.service.chess.Piece;
 import com.StounhandJ.ChessAPI.service.chess.Role;
 import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
@@ -10,9 +9,7 @@ import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreation
 import com.StounhandJ.ChessAPI.service.chess.pieces.Horse;
 import com.StounhandJ.ChessAPI.service.chess.pieces.Rook;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -20,8 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(Parameterized.class)
 public class AreaUnit {
@@ -150,5 +146,56 @@ public class AreaUnit {
         this.area.addPiece(x, y, Role.WHITE, Rook.class);
 
         this.area.getPiece(x, y);
+    }
+
+    @Test(expected = PieceNotFoundException.class)
+    public void addAllAvailableMovesExceptionTest() throws PieceNotFoundException {
+        this.area.getAllAvailableMoves(this.x_one + this.x_two, this.y_one + this.y_two);
+    }
+
+    @Test(expected = PieceNotFoundException.class)
+    public void addAllAvailableMovesDataExpectedTest() throws PieceNotFoundException {
+        Piece piece = new Horse(1, 1, Role.WHITE);
+        Area area = new Area(List.of(
+                piece
+        ));
+
+        area.getAllAvailableMoves(piece.getCoordinateX() + 1, piece.getCoordinateY());
+    }
+
+    @Test
+    public void addAllAvailableMovesDataTest() throws PieceNotFoundException {
+        Piece piece = new Horse(1, 1, Role.WHITE);
+        Area area = new Area(Arrays.asList(
+                piece,
+                new Rook(3, 2, Role.WHITE)
+        ));
+
+        List<List<Integer>> expected = Arrays.asList(
+                Arrays.asList(0, 3),
+                Arrays.asList(2, 3),
+                Arrays.asList(3, 0)
+
+        );
+
+        assertTrue(expected.containsAll(area.getAllAvailableMoves(piece.getCoordinateX(), piece.getCoordinateY())));
+    }
+
+    @Test
+    public void addAllAvailableMovesTest() {
+        Piece piece = new Horse(1, 1, Role.WHITE);
+        Area area = new Area(Arrays.asList(
+                piece,
+                new Rook(3, 2, Role.WHITE)
+        ));
+
+        List<List<Integer>> expected = Arrays.asList(
+                Arrays.asList(0, 3),
+                Arrays.asList(2, 3),
+                Arrays.asList(3, 0)
+        );
+
+        assertTrue(expected.containsAll(area.getAllAvailableMoves(piece)));
+
     }
 }

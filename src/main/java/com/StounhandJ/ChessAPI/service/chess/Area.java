@@ -4,6 +4,8 @@ import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Area {
@@ -13,6 +15,10 @@ public class Area {
     }
 
     private final List<Piece> pieces;
+
+    private final int SIZE_X = 8;
+
+    private final int SIZE_Y = 8;
 
     //<editor-fold desc="Add Piece">
 
@@ -63,6 +69,25 @@ public class Area {
     }
 
     //</editor-fold>
+
+    public List<List<Integer>> getAllAvailableMoves(Integer x, Integer y) throws PieceNotFoundException {
+        return getAllAvailableMoves(this.getPiece(x, y));
+    }
+
+    public List<List<Integer>> getAllAvailableMoves(Piece piece) {
+        List<List<Integer>> moves = new ArrayList<>();
+
+        for (Integer x = 0; x < SIZE_X; x++) {
+            for (Integer y = 0; y < SIZE_Y; y++) {
+                if (piece.isMoved(x, y) && !this.isOccupied(x, y))
+                {
+                    moves.add(Arrays.asList(x, y));
+                }
+            }
+        }
+
+        return moves;
+    }
 
     public Piece getPiece(Integer x, Integer y) throws PieceNotFoundException {
         for (Piece piece : this.pieces) {
