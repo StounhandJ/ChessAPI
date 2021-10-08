@@ -88,10 +88,19 @@ public class AreaUnit {
     }
 
     @Test
-    public void movePieceTest() throws PieceNotFoundException, FieldIsOccupiedException {
+    public void movePieceDataTest() throws PieceNotFoundException, FieldIsOccupiedException {
         Piece expected = this.piece_one;
 
         this.area.movePiece(this.x_one, this.y_one, this.x_one + 1, this.y_one + 1);
+
+        assertEquals(expected, this.area.getPiece(this.x_one + 1, this.y_one + 1));
+    }
+
+    @Test
+    public void movePieceTest() throws PieceNotFoundException, FieldIsOccupiedException {
+        Piece expected = this.piece_one;
+
+        this.area.movePiece(this.piece_one, this.x_one + 1, this.y_one + 1);
 
         assertEquals(expected, this.area.getPiece(this.x_one + 1, this.y_one + 1));
     }
@@ -102,7 +111,14 @@ public class AreaUnit {
     }
 
     @Test(expected = PieceNotFoundException.class)
-    public void delPieceExceptionTest() throws PieceNotFoundException {
+    public void delPieceTest() throws PieceNotFoundException {
+        this.area.delPiece(this.piece_one);
+
+        this.area.getPiece(this.x_one, this.y_one);
+    }
+
+    @Test(expected = PieceNotFoundException.class)
+    public void delPieceDataTest() throws PieceNotFoundException {
         this.area.delPiece(this.x_one, this.y_one);
 
         this.area.getPiece(this.x_one, this.y_one);

@@ -4,8 +4,6 @@ import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class Area {
@@ -39,18 +37,32 @@ public class Area {
 
     //</editor-fold>
 
+    //<editor-fold desc="Del Piece">
+
     public void delPiece(Integer x, Integer y) throws PieceNotFoundException {
-        this.pieces.remove(this.getPiece(x, y));
+        this.delPiece(this.getPiece(x, y));
     }
 
+    public void delPiece(Piece piece) {
+        this.pieces.remove(piece);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Move Piece">
+
     public void movePiece(Integer oldX, Integer oldY, Integer newX, Integer newY) throws PieceNotFoundException, FieldIsOccupiedException {
+        movePiece(this.getPiece(oldX, oldY), newX, newY);
+    }
+
+    public void movePiece(Piece piece, Integer newX, Integer newY) throws FieldIsOccupiedException {
         if (this.isOccupied(newX, newY))
             throw new FieldIsOccupiedException();
 
-        this.getPiece(oldX, oldY)
-                .setCoordinateX(newX)
-                .setCoordinateY(newY);
+        piece.setCoordinateX(newX).setCoordinateY(newY);
     }
+
+    //</editor-fold>
 
     public Piece getPiece(Integer x, Integer y) throws PieceNotFoundException {
         for (Piece piece : this.pieces) {
