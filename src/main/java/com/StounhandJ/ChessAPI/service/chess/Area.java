@@ -70,6 +70,8 @@ public class Area {
 
     //</editor-fold>
 
+    //<editor-fold desc="AvailableMove">
+
     public List<List<Integer>> getAllAvailableMoves(Integer x, Integer y) throws PieceNotFoundException {
         return getAllAvailableMoves(this.getPiece(x, y));
     }
@@ -79,8 +81,7 @@ public class Area {
 
         for (Integer x = 0; x < SIZE_X; x++) {
             for (Integer y = 0; y < SIZE_Y; y++) {
-                if (piece.isMoved(x, y) && !this.isOccupied(x, y))
-                {
+                if (this.isAvailableMove(piece, x, y)) {
                     moves.add(Arrays.asList(x, y));
                 }
             }
@@ -89,6 +90,42 @@ public class Area {
         return moves;
     }
 
+    public boolean isAvailableMove(Integer x, Integer y, Integer newX, Integer newY) throws PieceNotFoundException {
+        return this.isAvailableMove(this.getPiece(x, y), newX, newY);
+    }
+
+    public boolean isAvailableMove(Piece piece, Integer x, Integer y) {
+        Integer startX = x < piece.getCoordinateX() ? x : piece.getCoordinateX();
+        Integer endX = x > piece.getCoordinateX() ? x : piece.getCoordinateX();
+
+        Integer startY = y < piece.getCoordinateY() ? y : piece.getCoordinateY();
+        Integer endY = y > piece.getCoordinateY() ? y : piece.getCoordinateY();
+
+        for (Piece p : this.pieces) {
+            if (!p.equals(piece)) {
+                if (startX.equals(endX) || startY.equals(endY)) //Straight
+                {
+                    if ((p.getCoordinateX() > startX && p.getCoordinateX() < endX) ||
+                            (p.getCoordinateY() > startY && p.getCoordinateY() < endY))
+                        return false;
+                }
+
+                if (!startX.equals(endX) && !startY.equals(endY) && (endX - startX == endY - startY)) //Diagonally
+                {
+                    if ((p.getCoordinateX() > startX && p.getCoordinateX() < endX) &&
+                            (p.getCoordinateY() > startY && p.getCoordinateY() < endY))
+                        return false;
+                }
+
+                // In other cases, ignoring. Example: horse
+            }
+        }
+
+        return piece.isMoved(x, y) && !this.isOccupiedByRole(x, y, piece.getRole());
+    }
+
+    //</editor-fold>
+
     public Piece getPiece(Integer x, Integer y) throws PieceNotFoundException {
         for (Piece piece : this.pieces) {
             if (piece.isCoordinates(x, y)) {
@@ -96,6 +133,15 @@ public class Area {
             }
         }
         throw new PieceNotFoundException();
+    }
+
+    public boolean isOccupiedByRole(Integer x, Integer y, Role role) {
+        for (Piece piece : this.pieces) {
+            if (piece.getRole() == role && piece.isCoordinates(x, y)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isOccupied(Integer x, Integer y) {
