@@ -13,8 +13,13 @@ public class Queen extends Piece {
 
     @Override
     public boolean isMoved(Integer x, Integer y) {
-        int posX = abs(this.x - x);
-        int posY = abs(this.y - y);
+        int posX = abs(this.getCoordinateX() - x);
+        int posY = abs(this.getCoordinateY() - y);
         return (posY == posX) || ((posY == 0 && posX > 0) || (posX == 0 && posY > 0));
+    }
+
+    @Override
+    public Queen clone() {
+        return new Queen(this.getCoordinateX(), this.getCoordinateY(), this.getRole());
     }
 }

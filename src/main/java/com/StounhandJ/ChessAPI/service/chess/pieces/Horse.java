@@ -12,8 +12,13 @@ public class Horse extends Piece {
 
     @Override
     public boolean isMoved(Integer x, Integer y) {
-        int posX = abs(this.x - x);
-        int posY = abs(this.y - y);
+        int posX = abs(this.getCoordinateX() - x);
+        int posY = abs(this.getCoordinateY() - y);
         return (posY == 2 && posX == 1) || (posX == 2 && posY == 1);
+    }
+
+    @Override
+    public Horse clone() {
+        return new Horse(this.getCoordinateX(), this.getCoordinateY(), this.getRole());
     }
 }

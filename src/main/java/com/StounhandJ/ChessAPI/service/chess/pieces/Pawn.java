@@ -13,10 +13,15 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isMoved(Integer x, Integer y) {
-        int posX = abs(this.x - x);
-        int posY = this.y - y;
+        int posX = abs(this.getCoordinateX() - x);
+        int posY = this.getCoordinateY() - y;
 
-        return ((this.role == Role.BLACK && posY==1 ) || (this.role == Role.WHITE && posY==-1))
+        return ((this.getRole() == Role.BLACK && posY==1 ) || (this.getRole() == Role.WHITE && posY==-1))
                 && (posX==1 || posX==0);
+    }
+
+    @Override
+    public Pawn clone() {
+        return new Pawn(this.getCoordinateX(), this.getCoordinateY(), this.getRole());
     }
 }

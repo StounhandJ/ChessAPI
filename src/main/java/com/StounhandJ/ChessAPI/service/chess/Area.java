@@ -1,8 +1,7 @@
 package com.StounhandJ.ChessAPI.service.chess;
 
-import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
-import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
-import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
+import com.StounhandJ.ChessAPI.service.chess.exception.*;
+import com.StounhandJ.ChessAPI.service.chess.pieces.King;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,10 +90,14 @@ public class Area {
     }
 
     public boolean isAvailableMove(Integer x, Integer y, Integer newX, Integer newY) throws PieceNotFoundException {
-        return this.isAvailableMove(this.getPiece(x, y), newX, newY);
+        return this.isAvailableMove(this.getPiece(x, y), newX, newY, true);
     }
 
     public boolean isAvailableMove(Piece piece, Integer x, Integer y) {
+        return this.isAvailableMove(piece, x, y, true);
+    }
+
+    public boolean isAvailableMove(Piece piece, Integer x, Integer y, boolean check) {
         Integer startX = x < piece.getCoordinateX() ? x : piece.getCoordinateX();
         Integer endX = x > piece.getCoordinateX() ? x : piece.getCoordinateX();
 
@@ -105,8 +108,8 @@ public class Area {
             if (!p.equals(piece)) {
                 if (startX.equals(endX) || startY.equals(endY)) //Straight
                 {
-                    if ((p.getCoordinateX() > startX && p.getCoordinateX() < endX) ||
-                            (p.getCoordinateY() > startY && p.getCoordinateY() < endY))
+                    if ((p.getCoordinateX() > startX && p.getCoordinateX() < endX && startY.equals(p.getCoordinateY())) ||
+                            (p.getCoordinateY() > startY && p.getCoordinateY() < endY && startX.equals(p.getCoordinateX())))
                         return false;
                 }
 
@@ -120,11 +123,33 @@ public class Area {
                 // In other cases, ignoring. Example: horse
             }
         }
+        var t1 = piece.isMoved(x, y);
+        var t2 = this.isOccupiedByRole(x, y, piece.getRole());
 
-        return piece.isMoved(x, y) && !this.isOccupiedByRole(x, y, piece.getRole());
+        return piece.isMoved(x, y) && this.isOccupiedByRole(x, y, piece.getRole()) && (!check || !this.isCheck(piece, x, y));
     }
 
     //</editor-fold>
+
+    public boolean isCheck(Piece piece, Integer x, Integer y) {
+
+        Area areaClone = this.clone();
+        Piece king;
+
+        try {
+            areaClone.movePiece(piece.getCoordinateX(), piece.getCoordinateY(), x, y);
+            king = areaClone.getKing();
+        } catch (NotFoundKingException | MoreThanOneKingsException | FieldIsOccupiedException | PieceNotFoundException e) {
+            return false;
+        }
+
+        for (Piece p : areaClone.getPieces()) {
+            if (areaClone.isAvailableMove(p, king.getCoordinateX(), king.getCoordinateY(), false)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Piece getPiece(Integer x, Integer y) throws PieceNotFoundException {
         for (Piece piece : this.pieces) {
@@ -135,13 +160,43 @@ public class Area {
         throw new PieceNotFoundException();
     }
 
+    public Piece getKing() throws MoreThanOneKingsException, NotFoundKingException {
+        List<Piece> pieces = this.getPieces(King.class);
+
+        if (pieces.isEmpty()) {
+            throw new NotFoundKingException();
+        }
+        if (pieces.size() > 1) {
+            throw new MoreThanOneKingsException();
+        }
+        return pieces.get(0);
+    }
+
+    public List<Piece> getPieces() {
+        List<Piece> pieces = new ArrayList<>();
+        for (Piece piece : this.pieces) {
+            pieces.add(piece.clone());
+        }
+        return pieces;
+    }
+
+    public List<Piece> getPieces(Class<? extends Piece> pieceT) {
+        List<Piece> pieces = new ArrayList<>();
+        for (Piece piece : this.pieces) {
+            if (piece.getClass() == pieceT) {
+                pieces.add(piece.clone());
+            }
+        }
+        return pieces;
+    }
+
     public boolean isOccupiedByRole(Integer x, Integer y, Role role) {
         for (Piece piece : this.pieces) {
             if (piece.getRole() == role && piece.isCoordinates(x, y)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean isOccupied(Integer x, Integer y) {
@@ -152,6 +207,11 @@ public class Area {
         }
         return false;
     }
+
+    public Area clone() {
+        return new Area(this.getPieces());
+    }
+
 
 //    public List<Integer> area;
 //

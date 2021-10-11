@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(Parameterized.class)
 public class AreaUnit {
@@ -40,7 +40,7 @@ public class AreaUnit {
         Piece piece_one_1 = new Horse(x_one, y_one, Role.BLACK);
         Piece piece_two_1 = new Rook(x_two, y_two, Role.BLACK);
         return new Object[]{
-                new Area(Arrays.asList(piece_one_1, piece_two_1)),
+                new Area(new ArrayList<>(Arrays.asList(piece_one_1, piece_two_1))),
                 piece_one_1,
                 piece_two_1,
                 x_one,
@@ -161,5 +161,13 @@ public class AreaUnit {
         ));
 
         area.getAllAvailableMoves(piece.getCoordinateX() + 1, piece.getCoordinateY());
+    }
+
+    @Test
+    public void cloneTest() {
+        List<Piece> expected = this.area.getPieces();
+        List<Piece> actual = this.area.clone().getPieces();
+
+        assertEquals(expected.size(), actual.size());
     }
 }

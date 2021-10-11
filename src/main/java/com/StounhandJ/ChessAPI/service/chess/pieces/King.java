@@ -13,8 +13,13 @@ public class King extends Piece {
 
     @Override
     public boolean isMoved(Integer x, Integer y) {
-        int posX = abs(this.x - x);
-        int posY = abs(this.y - y);
+        int posX = abs(this.getCoordinateX() - x);
+        int posY = abs(this.getCoordinateY() - y);
         return posY <= 1 && posX <= 1;
+    }
+
+    @Override
+    public King clone() {
+        return new King(this.getCoordinateX(), this.getCoordinateY(), this.getRole());
     }
 }
