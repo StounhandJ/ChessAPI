@@ -3,7 +3,7 @@ package com.StounhandJ.ChessAPI.unit;
 import com.StounhandJ.ChessAPI.service.chess.Area;
 import com.StounhandJ.ChessAPI.service.chess.Piece;
 import com.StounhandJ.ChessAPI.service.chess.Role;
-import com.StounhandJ.ChessAPI.service.chess.exception.FieldIsOccupiedException;
+import com.StounhandJ.ChessAPI.service.chess.exception.NoAvailableMoveException;
 import com.StounhandJ.ChessAPI.service.chess.exception.PieceNotFoundException;
 import com.StounhandJ.ChessAPI.service.chess.exception.UnsuccessfulPieceCreationException;
 import com.StounhandJ.ChessAPI.service.chess.pieces.Horse;
@@ -84,25 +84,25 @@ public class AreaUnit {
     }
 
     @Test
-    public void movePieceDataTest() throws PieceNotFoundException, FieldIsOccupiedException {
+    public void movePieceDataTest() throws PieceNotFoundException, NoAvailableMoveException {
         Piece expected = this.piece_one;
 
-        this.area.movePiece(this.x_one, this.y_one, this.x_one + 1, this.y_one + 1);
+        this.area.movePiece(this.x_one, this.y_one, this.x_one + 1, this.y_one);
 
-        assertEquals(expected, this.area.getPiece(this.x_one + 1, this.y_one + 1));
+        assertEquals(expected, this.area.getPiece(this.x_one + 1, this.y_one));
     }
 
     @Test
-    public void movePieceTest() throws PieceNotFoundException, FieldIsOccupiedException {
+    public void movePieceTest() throws PieceNotFoundException, NoAvailableMoveException {
         Piece expected = this.piece_one;
 
-        this.area.movePiece(this.piece_one, this.x_one + 1, this.y_one + 1);
+        this.area.movePiece(this.piece_one, this.x_one, this.y_one + 1);
 
-        assertEquals(expected, this.area.getPiece(this.x_one + 1, this.y_one + 1));
+        assertEquals(expected, this.area.getPiece(this.x_one, this.y_one + 1));
     }
 
-    @Test(expected = FieldIsOccupiedException.class)
-    public void movePieceExceptionTest() throws PieceNotFoundException, FieldIsOccupiedException {
+    @Test(expected = NoAvailableMoveException.class)
+    public void movePieceExceptionTest() throws PieceNotFoundException, NoAvailableMoveException {
         this.area.movePiece(this.x_one, this.y_one, this.x_two, this.y_two);
     }
 
@@ -121,7 +121,7 @@ public class AreaUnit {
     }
 
     @Test
-    public void addPieceTest() throws PieceNotFoundException, FieldIsOccupiedException {
+    public void addPieceTest() throws PieceNotFoundException, NoAvailableMoveException {
         Integer x = this.x_one + this.x_two;
         Integer y = this.y_one + this.y_two;
         Piece piece = new Rook(x, y, Role.WHITE);
@@ -130,8 +130,8 @@ public class AreaUnit {
         assertEquals(piece, this.area.getPiece(x, y));
     }
 
-    @Test(expected = FieldIsOccupiedException.class)
-    public void addPieceExceptionTest() throws FieldIsOccupiedException {
+    @Test(expected = NoAvailableMoveException.class)
+    public void addPieceExceptionTest() throws NoAvailableMoveException {
         Integer x = this.x_one;
         Integer y = this.y_one;
         Piece piece = new Rook(x, y, Role.WHITE);
@@ -140,7 +140,7 @@ public class AreaUnit {
     }
 
     @Test
-    public void addPieceDataTest() throws FieldIsOccupiedException, UnsuccessfulPieceCreationException, PieceNotFoundException {
+    public void addPieceDataTest() throws NoAvailableMoveException, UnsuccessfulPieceCreationException, PieceNotFoundException {
         Integer x = this.x_one + this.x_two;
         Integer y = this.y_one + this.y_two;
         this.area.addPiece(x, y, Role.WHITE, Rook.class);

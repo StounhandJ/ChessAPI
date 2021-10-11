@@ -81,7 +81,6 @@ public class AreaMovedTest {
     public void getAllAvailableMovesTest(List<Piece> pieces, List<List<Integer>> expected) {
         Piece piece = pieces.get(0);
         Area area = new Area(pieces);
-        var actual = area.getAllAvailableMoves(piece);
 
         assertTrue(expected.containsAll(area.getAllAvailableMoves(piece)));
 

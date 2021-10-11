@@ -22,7 +22,7 @@ public class Area {
     //<editor-fold desc="Add Piece">
 
     public void addPiece(Integer x, Integer y, Role role, Class<? extends Piece> pieceClass)
-            throws FieldIsOccupiedException, UnsuccessfulPieceCreationException {
+            throws NoAvailableMoveException, UnsuccessfulPieceCreationException {
 
         Piece piece;
         try {
@@ -34,9 +34,9 @@ public class Area {
         this.addPiece(piece);
     }
 
-    public void addPiece(Piece piece) throws FieldIsOccupiedException {
+    public void addPiece(Piece piece) throws NoAvailableMoveException {
         if (this.isOccupied(piece.getCoordinateX(), piece.getCoordinateY()))
-            throw new FieldIsOccupiedException();
+            throw new NoAvailableMoveException();
         this.pieces.add(piece);
     }
 
@@ -56,13 +56,13 @@ public class Area {
 
     //<editor-fold desc="Move Piece">
 
-    public void movePiece(Integer oldX, Integer oldY, Integer newX, Integer newY) throws PieceNotFoundException, FieldIsOccupiedException {
+    public void movePiece(Integer oldX, Integer oldY, Integer newX, Integer newY) throws PieceNotFoundException, NoAvailableMoveException {
         movePiece(this.getPiece(oldX, oldY), newX, newY);
     }
 
-    public void movePiece(Piece piece, Integer newX, Integer newY) throws FieldIsOccupiedException {
-        if (this.isOccupied(newX, newY))
-            throw new FieldIsOccupiedException();
+    public void movePiece(Piece piece, Integer newX, Integer newY) throws NoAvailableMoveException {
+        if (!this.isAvailableMove(piece, newX, newY))
+            throw new NoAvailableMoveException();
 
         piece.setCoordinateX(newX).setCoordinateY(newY);
     }
@@ -125,31 +125,14 @@ public class Area {
         }
         var t1 = piece.isMoved(x, y);
         var t2 = this.isOccupiedByRole(x, y, piece.getRole());
+        var t3 = (!check || !this.isCheck(piece, x, y));
 
         return piece.isMoved(x, y) && this.isOccupiedByRole(x, y, piece.getRole()) && (!check || !this.isCheck(piece, x, y));
     }
 
     //</editor-fold>
 
-    public boolean isCheck(Piece piece, Integer x, Integer y) {
-
-        Area areaClone = this.clone();
-        Piece king;
-
-        try {
-            areaClone.movePiece(piece.getCoordinateX(), piece.getCoordinateY(), x, y);
-            king = areaClone.getKing();
-        } catch (NotFoundKingException | MoreThanOneKingsException | FieldIsOccupiedException | PieceNotFoundException e) {
-            return false;
-        }
-
-        for (Piece p : areaClone.getPieces()) {
-            if (areaClone.isAvailableMove(p, king.getCoordinateX(), king.getCoordinateY(), false)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    //<editor-fold desc="Get piece and pieces">
 
     public Piece getPiece(Integer x, Integer y) throws PieceNotFoundException {
         for (Piece piece : this.pieces) {
@@ -158,18 +141,6 @@ public class Area {
             }
         }
         throw new PieceNotFoundException();
-    }
-
-    public Piece getKing() throws MoreThanOneKingsException, NotFoundKingException {
-        List<Piece> pieces = this.getPieces(King.class);
-
-        if (pieces.isEmpty()) {
-            throw new NotFoundKingException();
-        }
-        if (pieces.size() > 1) {
-            throw new MoreThanOneKingsException();
-        }
-        return pieces.get(0);
     }
 
     public List<Piece> getPieces() {
@@ -190,6 +161,50 @@ public class Area {
         return pieces;
     }
 
+    public Piece getKing() throws MoreThanOneKingsException, NotFoundKingException {
+        List<Piece> pieces = this.getPieces(King.class);
+
+        if (pieces.isEmpty()) {
+            throw new NotFoundKingException();
+        }
+        if (pieces.size() > 1) {
+            throw new MoreThanOneKingsException();
+        }
+        return pieces.get(0);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Is">
+
+    public boolean isCheck(Piece piece, Integer x, Integer y) {
+
+        List<Piece> pieces = this.getPieces();
+        for (Piece p : pieces) {
+            if (piece.equals(p))
+            {
+                p.setCoordinateX(x).setCoordinateY(y);
+                continue;
+            }
+        }
+
+        Area areaClone = new Area(pieces);
+        Piece king;
+
+        try {
+            king = areaClone.getKing();
+        } catch (NotFoundKingException | MoreThanOneKingsException e) {
+            return false;
+        }
+
+        for (Piece p : areaClone.getPieces()) {
+            if (areaClone.isAvailableMove(p, king.getCoordinateX(), king.getCoordinateY(), false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isOccupiedByRole(Integer x, Integer y, Role role) {
         for (Piece piece : this.pieces) {
             if (piece.getRole() == role && piece.isCoordinates(x, y)) {
@@ -208,90 +223,10 @@ public class Area {
         return false;
     }
 
+    //</editor-fold>
+
     public Area clone() {
         return new Area(this.getPieces());
     }
 
-
-//    public List<Integer> area;
-//
-//    public String event;
-//
-//    public boolean endGame;
-//
-//    public void __construct(List<Integer> area) {
-//        this.area = area;
-//        this.event = "";
-//        this.endGame = false;
-//    }
-//
-//
-//
-//    public boolean checkWhoGoCage(Integer oldX, Integer oldY, Integer x, Integer y, Integer player) {
-//        for (mas:
-//             this.area) {
-//            if (mas["player"] != player) {
-//                String path = '\Libraries\Chess\Figure\\'.mas["chessPiece"];
-//                ChessPiece figure = new path(mas["coordinates"][0], mas["coordinates"][1], mas["player"], this.area);  // Сделать клонирование area
-//                figure.newX = x;
-//                figure.newY = y;
-//                figure.area.movePiece(oldX, oldY, x, y);
-//                if (figure.check() && !(x == mas["coordinates"][0] && y == mas["coordinates"][1])) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public void checkEnd(Integer player) {
-//        checkEnd(player, false);
-//    }
-//
-//    public void checkEnd(Integer player, boolean checkmate) {
-//        king = [];
-//        this.event = "";
-//        this.endGame = false;
-//        for(mas : this.area)
-//        {
-//            if (mas["chessPiece"] == "King" && mas[ "player"] ==player)
-//            {
-//                king = mas["coordinates"];
-//                break;
-//            }
-//        }
-//
-//        if (king == []){
-//            return;
-//        }
-//
-//        for(mas : this.area)
-//        {
-//            if (mas["player"] != player) {
-//                path = '\Libraries\Chess\Figure\\'.mas["chessPiece"];
-//                figure = new path(mas["coordinates"][0], mas["coordinates"][1], mas["player"], this.area);  // Сделать клонирование area
-//                figure.newX = king[0];
-//                figure.newY = king[1];
-//                if (figure.check(false)) {
-//                    this.event = "Шах для ". (player == 1 ? "Белых" : "Черных");
-//                    if (Checkmate) {
-//                        foreach(this.area as item)
-//                        {
-//                            if (item["player"] == player) {
-//                                path2 = '\Libraries\Chess\Figure\\'.item["chessPiece"];
-//                                figureChe = new path2(item["coordinates"][0], item["coordinates"][1], item["player"], this.area);
-//                                if (figureChe.getPossibleMoves()) {
-//                                    return;
-//                                }
-//                            }
-//                        }
-//                        this.event = "Мат для ". (player == 1 ? "Белых" : "Черных");
-//                        this.endGame = true;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//
 }

@@ -70,4 +70,12 @@ public abstract class Piece {
     //</editor-fold>
 
     public abstract Piece clone();
+
+    public boolean equals(Piece piece)
+    {
+        return this.getClass() == piece.getClass() &&
+                this.getCoordinateX().equals(piece.getCoordinateX()) &&
+                this.getCoordinateY().equals(piece.getCoordinateY()) &&
+                this.getRole().equals(piece.getRole());
+    }
 }
